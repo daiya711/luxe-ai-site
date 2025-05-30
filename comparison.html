@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品比較 - LUXE AI</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a; color: #ffffff;
+        }
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 40px 20px;
+        }
+        .comparison-grid {
+            display: flex; gap: 20px; justify-content: center;
+        }
+        .product-card {
+            flex: 1;
+            background: rgba(20, 20, 30, 0.95);
+            padding: 25px; border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+        .product-title {
+            font-size: 22px; font-weight: 700; margin-bottom: 15px; color: #ff6b6b;
+        }
+        .product-price {
+            font-size: 26px; font-weight: bold; color: #feca57; margin-bottom: 10px;
+        }
+        .features {
+            font-size: 16px; line-height: 1.5; color: rgba(255,255,255,0.8);
+        }
+        .winner-badge {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white; padding: 6px 15px; border-radius: 15px;
+            font-size: 14px; font-weight: bold; display: inline-block; margin-bottom: 15px;
+        }
+        .cta-button {
+            display: inline-block; margin-top: 15px; padding: 12px 20px;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            border-radius: 10px; color: white; text-decoration: none; font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 style="text-align: center; margin-bottom: 30px;">商品比較 - 究極の選択</h2>
+        <div class="comparison-grid">
+
+            <div class="product-card">
+                <div class="winner-badge">🥇 WINNER</div>
+                <div class="product-title">MacBook Pro 16インチ M3 Max</div>
+                <div class="product-price">¥498,800</div>
+                <div class="features">
+                    ✅ CPU: 20コア (最高性能)<br>
+                    ✅ バッテリー: 最大22時間<br>
+                    ✅ ディスプレイ: Liquid Retina XDR
+                </div>
+                <a href="#" class="cta-button">購入する</a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-title">Surface Studio 2+</div>
+                <div class="product-price">¥678,800</div>
+                <div class="features">
+                    ✅ 28インチ PixelSense<br>
+                    ✅ Surface Pen対応<br>
+                    ✅ プロ仕様カラー再現
+                </div>
+                <a href="#" class="cta-button">購入する</a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-title">Gaming Beast RTX 4090</div>
+                <div class="product-price">¥398,800</div>
+                <div class="features">
+                    ✅ GPU: RTX 4090搭載<br>
+                    ✅ 4K 120fpsゲーム体験<br>
+                    ✅ 液冷カスタムシステム
+                </div>
+                <a href="#" class="cta-button">購入する</a>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

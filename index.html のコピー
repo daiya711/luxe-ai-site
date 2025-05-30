@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUXE AI - Premium Shopping Experience</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+            cursor: none;
+        }
+        
+        /* カスタムカーソル */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ff6b6b;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            backdrop-filter: blur(2px);
+        }
+        
+        .cursor-follower {
+            width: 8px;
+            height: 8px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.15s ease;
+        }
+        
+        /* 動的背景 */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 107, 107, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(78, 84, 200, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(255, 154, 0, 0.2) 0%, transparent 50%);
+            animation: bgShift 8s ease-in-out infinite;
+            z-index: -1;
+        }
+        
+        @keyframes bgShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+        
+        /* ヘッダー */
+        .header {
+            position: relative;
+            padding: 60px 0;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(20, 20, 20, 0.9) 100%);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            margin: 40px 0;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #ff6b6b, transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .logo {
+            font-size: 48px;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff6b6b, #feca57, #ff9ff3, #54a0ff);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 4s ease infinite;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .tagline {
+            font-size: 24px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 40px;
+            letter-spacing: 1px;
+        }
+        
+        .search-section {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 25px 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            color: white;
+            font-size: 18px;
+            backdrop-filter: blur(20px);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+            transform: scale(1.02);
+        }
+        
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* メインコンテンツ */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 450px;
+            gap: 40px;
+            margin: 60px 0;
+        }
+        
+        .chat-container {
+            background: linear-gradient(135deg, rgba(20, 20, 30, 0.9) 0%, rgba(30, 30, 40, 0.8) 100%);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 30px;
+            padding: 40px;
+            min-height: 700px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chat-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255, 107, 107, 0.1), transparent);
+            animation: rotate 10s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+        
+        .ai-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .ai-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .ai-name {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .ai-status {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+        
+        /* プロダクトカード */
+        .products-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .featured-product {
+            position: relative;
+            background: linear-gradient(135deg, rgba(30, 30, 40, 0.95) 0%, rgba(40, 40, 50, 0.9) 100%);
+            border-radius: 25px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px);
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: pointer;
+        }
+        
+        .featured-product:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(255, 107, 107, 0.2);
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .product-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.8s ease;
+        }
+        
+        .featured-product:hover .product-image::before {
+            left: 100%;
+        }
+        
+        .product-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: white;
+        }
+        
+        .product-price {
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+        
+        .price-original {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: line-through;
+            margin-left: 10px;
+            font-weight: 400;
+        }
+        
+        .product-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .stars {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        
+        .rating-score {
+            font-weight: 700;
+            color: #feca57;
+        }
+        
+        .reviews-count {
+            color: rgba(255, 255, 255, 0.6);
+            margin-left: 8px;
+        }
+        
+        .urgency-indicator {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #ff6b6b;
+            font-weight: 600;
+            animation: blink 2s ease-in-out infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .cta-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .cta-button:hover::before {
+            left: 100%;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 107, 107, 0.4);
+        }
+        
+        /* 比較セクション */
+        .comparison-section {
+            background: linear-gradient(135deg, rgba(20, 20, 30, 0.9) 0%, rgba(30, 30, 40, 0.8) 100%);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 30px;
+            padding: 40px;
+            margin-top: 60px;
+        }
+        
+        .section-title {
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .comparison-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        
+        .comparison-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 107, 107, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .winner-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        /* フローティング要素 */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+        }
+        
+        .floating-icon {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0.1;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .icon-1 { top: 20%; left: 10%; animation-delay: 0s; }
+        .icon-2 { top: 60%; right: 15%; animation-delay: 2s; }
+        .icon-3 { bottom: 30%; left: 20%; animation-delay: 4s; }
+        .icon-4 { top: 40%; right: 30%; animation-delay: 6s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-20px) rotate(90deg); }
+            50% { transform: translateY(-10px) rotate(180deg); }
+            75% { transform: translateY(-30px) rotate(270deg); }
+        }
+        
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 0 20px;
+            }
+            
+            .logo {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+    <div class="bg-animation"></div>
+    
+    <div class="floating-elements">
+        <div class="floating-icon icon-1">💎</div>
+        <div class="floating-icon icon-2">⚡</div>
+        <div class="floating-icon icon-3">🔥</div>
+        <div class="floating-icon icon-4">✨</div>
+    </div>
+    
+    <div class="container">
+        <header class="header">
+            <div class="logo">LUXE AI</div>
+            <div class="tagline">The Future of Premium Shopping</div>
+            <div class="search-section">
+                <input type="text" class="search-input" placeholder="何が欲しいですか？究極の体験をお約束します...">
+            </div>
+        </header>
+        
+        <div class="main-grid">
+            <div class="chat-container">
+                <div class="ai-header">
+                    <div class="ai-avatar">🧠</div>
+                    <div>
+                        <div class="ai-name">LUXE AI Assistant</div>
+                        <div class="ai-status">あなた専用のプレミアムコンシェルジュ</div>
+                    </div>
+                </div>
+                
+                <div class="chat-messages">
+                    <div style="background: rgba(255, 107, 107, 0.1); border: 1px solid rgba(255, 107, 107, 0.2); border-radius: 20px; padding: 25px; margin-bottom: 20px;">
+                        <strong style="color: #ff6b6b;">🎯 あなたの理想を現実に</strong><br><br>
+                        こんにちは。私はあなたの人生を変える商品を見つける専門AIです。単なる買い物ではなく、あなたの夢を叶える投資のお手伝いをします。
+                        <br><br>
+                        今日はどんな変化を求めていますか？
+                    </div>
+                    
+                    <div style="background: rgba(78, 84, 200, 0.1); border: 1px solid rgba(78, 84, 200, 0.2); border-radius: 20px; padding: 20px; margin: 20px 0; margin-left: 60px;">
+                        もっと効率的に仕事がしたい。今のノートPCだと思うようにいかなくて...
+                    </div>
+                    
+                    <div style="background: rgba(255, 107, 107, 0.1); border: 1px solid rgba(255, 107, 107, 0.2); border-radius: 20px; padding: 25px;">
+                        <strong style="color: #ff6b6b;">🚀 完璧です！</strong><br><br>
+                        仕事の効率を劇的に向上させる最高峰のマシンをご提案します。これらは単なるツールではありません。あなたの可能性を最大限に引き出し、競合に差をつける武器です。
+                        <br><br>
+                        右側の厳選されたプレミアム商品をご覧ください。それぞれがあなたの人生を変える力を持っています。
+                    </div>
+                </div>
+            </div>
+            
+            <div class="products-sidebar">
+                <div class="featured-product">
+                    <div class="product-badge">🏆 BEST SELLER</div>
+                    <div class="product-image">MacBook Pro 16" M3 Max</div>
+                    <div class="product-title">MacBook Pro 16インチ M3 Max</div>
+                    <div class="product-price">
+                        ¥498,800
+                        <span class="price-original">¥548,800</span>
+                    </div>
+                    <div class="product-rating">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <div class="rating-score">4.9</div>
+                        <div class="reviews-count">(3,247)</div>
+                    </div>
+                    <div class="urgency-indicator">
+                        🔥 残り3台！24時間限定50,000円OFF
+                    </div>
+                    <button class="cta-button">今すぐ手に入れる</button>
+                </div>
+                
+                <div class="featured-product">
+                    <div class="product-badge">💎 PREMIUM</div>
+                    <div class="product-image">Surface Studio 2+</div>
+                    <div class="product-title">Microsoft Surface Studio 2+</div>
+                    <div class="product-price">
+                        ¥678,800
+                        <span class="price-original">¥748,800</span>
+                    </div>
+                    <div class="product-rating">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <div class="rating-score">4.8</div>
+                        <div class="reviews-count">(1,892)</div>
+                    </div>
+                    <div class="urgency-indicator">
+                        ⚡ クリエイター限定！今だけ70,000円OFF
+                    </div>
+                    <button class="cta-button">運命を変える</button>
+                </div>
+                
+                <div class="featured-product">
+                    <div class="product-badge">🚀 HOT</div>
+                    <div class="product-image">Gaming Beast RTX 4090</div>
+                    <div class="product-title">究極ゲーミングPC RTX 4090</div>
+                    <div class="product-price">
+                        ¥398,800
+                        <span class="price-original">¥458,800</span>
+                    </div>
+                    <div class="product-rating">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <div class="rating-score">4.9</div>
+                        <div class="reviews-count">(2,156)</div>
+                    </div>
+                    <div class="urgency-indicator">
+                        🎮 ゲーマー必見！限定60,000円OFF
+                    </div>
+                    <button class="cta-button">勝利を掴む</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison-section">
+            <div class="section-title">⚔️ 究極の比較対決</div>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <div class="winner-badge">🥇 WINNER</div>
+                    <h3 style="color: #ff6b6b; font-size: 24px; margin-bottom: 20px;">MacBook Pro M3 Max</h3>
+                    <div style="margin-bottom: 15px;"><strong>圧倒的パフォーマンス:</strong> 最大20コアCPU</div>
+                    <div style="margin-bottom: 15px;"><strong>驚異のバッテリー:</strong> 最大22時間</div>
+                    <div style="margin-bottom: 15px;"><strong>プロ仕様ディスプレイ:</strong> Liquid Retina XDR</div>
+                    <div style="color: #4ecdc4;"><strong>投資価値:</strong> 5年先まで最前線で活躍</div>
+                </div>
+                
+                <div class="comparison-card">
+                    <h3 style="color: #4ecdc4; font-size: 24px; margin-bottom: 20px;">Surface Studio 2+</h3>
+                    <div style="margin-bottom: 15px;"><strong>クリエイター専用:</strong> 28インチPixelSense</div>
+                    <div style="margin-bottom: 15px;"><strong>直感操作:</strong> Surface Penに最適化</div>
+                    <div style="margin-bottom: 15px;"><strong>スタジオ品質:</strong> プロ仕様カラー再現</div>
+                    <div style="color: #feca57;"><strong>芸術性:</strong> 創造力を無限に解放</div>
+                </div>
+                
+                <div class="comparison-card">
+                    <h3 style="color: #feca57; font-size: 24px; margin-bottom: 20px;">Gaming Beast RTX 4090</h3>
+                    <div style="margin-bottom: 15px;"><strong>究極のGPU:</strong> RTX 4090搭載</div>
+                    <div style="margin-bottom: 15px;"><strong>4K 120fps:</strong> 次世代ゲーム体験</div>
+                    <div style="margin-bottom: 15px;"><strong>冷却システム:</strong> 液冷カスタムループ</div>
+                    <div style="color: #ff6b6b;"><strong>支配力:</strong> あらゆるゲームを完全制覇</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // カスタムカーソル
+        const cursor = document.querySelector('.cursor');
+        const follower = document.querySelector('.cursor-follower');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            setTimeout(() => {
+                follower.style.left = e.clientX + 'px';
+                follower.style.top = e.clientY + 'px';
+            }, 100);
+        });
+        
+        // ホバーエフェクト
+        document.querySelectorAll('.featured-product, .cta-button').forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'scale(1.5)';
+                cursor.style.borderColor = '#feca57';
+            });
+            
+            element.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'scale(1)';
+                cursor.style.borderColor = '#ff6b6b';
+            });
+        });
+        
+        // 商品カードのインタラクション
+        document.querySelectorAll('.featured-product').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                }, 150);
+            });
+        });
+        
+        // CTAボタンのクリックエフェクト
+        document.querySelectorAll('.cta-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const ripple = document.createElement('span');
+                ripple.style.position = 'absolute';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(255, 255, 255, 0.6)';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.animation = 'ripple 0.6s linear';
+                ripple.style.left = '50%';
+                ripple.style.top = '50%';
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+        
+        // 検索入力のフォーカスエフェクト
+        const searchInput = document.querySelector('.search-input');
+        searchInput.addEventListener('focus', () => {
+            searchInput.style.boxShadow = '0 0 50px rgba(255, 107, 107, 0.5)';
+        });
+        
+        searchInput.addEventListener('blur', () => {
+            searchInput.style.boxShadow = '0 0 30px rgba(255, 107, 107, 0.3)';
+        });
+        
+        // アニメーション用CSS追加
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
